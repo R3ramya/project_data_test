@@ -139,5 +139,3 @@ Open your web browser and navigate to:
 ## License
 
 [MIT License](https://opensource.org/licenses/MIT)
-
-Copyright (c) [year] [fullname]
