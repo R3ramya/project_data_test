@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Database Data</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f4f4f4;
+        }
+        h2 {
+            border-bottom: 2px solid #333;
+            padding-bottom: 10px;
+        }
+        #json-view {
+            white-space: pre-wrap; 
+            background: #f4f4f4;
+            padding: 10px;
+            border: 1px solid #ddd;
+        }
+        #data-container {
+            display: none; 
+        }
+        .button-container {
+            margin-bottom: 20px;
+        }
+        .button-container button {
+            padding: 10px;
+            margin-right: 10px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <h1>Database Data</h1>
+    <div class="button-container">
+        <button onclick="showHtml()">Show Data</button>
+        <button onclick="showJson()">Show JSON</button>
+    </div>
+    <div id="data-container">
+   
+        {% for table, rows in data.items() %}
+            <h2>{{ table }}</h2>
+            <table>
+                <thead>
+                    <tr>
+                        {% if rows %}
+                            {% for column in rows[0].keys() %}
+                                <th>{{ column }}</th>
+                            {% endfor %}
+                        {% endif %}
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for row in rows %}
+                        <tr>
+                            {% for value in row.values() %}
+                                <td>{{ value }}</td>
+                            {% endfor %}
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% endfor %}
+    </div>
+    <div id="json-view"></div>
+
+    <script>
+        function showHtml() {
+            document.getElementById('data-container').style.display = 'block';
+            document.getElementById('json-view').style.display = 'none';
+        }
+
+        function showJson() {
+            document.getElementById('data-container').style.display = 'none';
+            document.getElementById('json-view').style.display = 'block';
+            fetch('/get_json_data')
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('json-view').innerText = JSON.stringify(data, null, 2);
+                })
+                .catch(error => console.error('Error fetching JSON data:', error));
+        }
+
+        document.addEventListener('DOMContentLoaded', showJson);
+    </script>
+</body>
+</html>
+
